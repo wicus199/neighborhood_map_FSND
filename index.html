@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Move Planner</title>
+
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <header>
+        <h2 id="pageHeader">Map Project</h2>
+        <button data-bind="click: deleteTempMarkers">Delete FS markers</button>
+    </header>
+
+    <section id="mainContainer">
+        <div id="sidebar">
+
+            <div id="placesArea">
+                <ul data-bind="foreach: markersList">
+                    <li id="list-item" data-bind="text: title, click: $parent.selectMarker"></li>
+                </ul>
+
+            </div>
+
+            <div id="wikiArticle" data-bind="with: wikiDiv"> <!--data-bind="template: {name: 'fs-template', data: currentFsMarker}"-->
+                <h2 id="wikiHeading" data-bind="text: $data[1][0]"></h2>
+                <p id="wikiText" data-bind="text: $data[2][0]"></p>
+                <a id="wikiLink" href="" data-bind="attr: {href: 'http://en.wikipedia.org/wiki/'+$data[1][0]}">Read more...</a>
+
+            </div>
+
+        </div>
+
+        <div id="map"></div>
+    </section>
+
+
+    <footer>
+        <p>Map provided by Google</p>
+    </footer>
+
+    <script type="text/html" id="fs-template">
+    <!--
+        <h3 id="venue-name" data-bind="text: venueName"></h3>
+        <p id="contact-details" data-bind="text: venueContact"></p>
+        <p id="category" data-bind="text: categories"></p>
+        <p id="address" data-bind="text: location"></p>
+        <p id="check-ins" data-bind="text: venueStats"></p>
+    -->
+    </script>
+
+    <script src="js/lib/knockout-3.2.0.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="js/markerModel.js"></script>
+    <script src="js/foursquareModel.js"></script>
+    <script src="js/app.js"></script>
+    <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD5QwMXri-rR2ZuebHVKVNKy1JJVJTMKS8&v=3&callback=mapSuccess">
+    </script>
+
+</body>
+</html>
