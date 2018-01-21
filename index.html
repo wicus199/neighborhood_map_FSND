@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
     <meta name="mobile-web-app-capable" content="yes">
     <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
 </head>
 
 <body>
@@ -27,7 +28,7 @@
             <hr />
             <div id="placesArea">
                 <ul data-bind="foreach: result">
-                    <li id="list-item" data-bind="text: marker.title, click: $parent.selectMarker"></li>
+                    <li id="listItem" data-bind="text: marker.title, click: $parent.selectMarker"></li>
                 </ul>
 
             </div>
@@ -40,8 +41,7 @@
             <div id="wikiArticle" data-bind="with: wikiDiv">
                 <h2 id="wikiHeading" data-bind="text: $data[1][0]"></h2>
                 <p id="wikiText" data-bind="text: $data[2][0]"></p>
-                <a id="wikiLink" href="" data-bind="attr: {href: 'http://en.wikipedia.org/wiki/'+$data[1][0]}">Read more...</a>
-
+                <a id="wikiLink" href="" target="_blank" data-bind="attr: {href: 'http://en.wikipedia.org/wiki/'+$data[1][0]}">Read more</a>
             </div>
             <hr />
             <p id="footer">Map provided by Google</p>

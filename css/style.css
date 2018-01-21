@@ -12,6 +12,7 @@
 
 html, body {
         height: 100%;
+        font-family: 'Ubuntu', sans-serif;
 }
 
 header {
@@ -19,7 +20,7 @@ header {
     height: 39px;
     border: 2px solid #e0e0e0;
     border-radius: 3px;
-    background-color: #fff;
+    background-color: #1c262f;
     text-align: center;
 }
 
@@ -29,10 +30,12 @@ header {
     font-size: 21px;
     padding-top: 5px;
     margin: auto;
+    color: white;
 }
 
 #openButton {
     width: 10%;
+    color: #02b3e4;
 }
 
 /*Main container is fixed layout, no flex for sidebar and map*/
@@ -53,7 +56,11 @@ header {
     overflow-x: hidden;
     transition: 0.5s;
 
-    background-color: #ddd;
+    background-color: #2e3d49;
+}
+
+#listItem {
+    color: white;
 }
 
 #closeButton {
@@ -65,10 +72,12 @@ header {
     padding-right: 5px;
     margin-top: 2px;
     text-decoration: none;
+    color: #02b3e4;
 }
 
 #closeButton:visited {
     text-decoration: none;
+    color: #02b3e4;
 }
 
 #openButton {
@@ -77,8 +86,8 @@ header {
 
 #sidebar hr {
     border-width: 1px;
-    border-color: #000;
     border-style: dotted;
+    border-color: #02b3e4;
 }
 
 #searchBox {
@@ -121,9 +130,10 @@ header {
     display: block;
     margin: 5px auto;
     font-size: 15px;
-    background-color: #2196F3;
+    background-color: #02b3e4;
     border: none;
     border-radius: 1px;
+    color: #fff
 }
 
 .smallButton {
@@ -132,18 +142,48 @@ header {
     display: block;
     margin: 5px auto;
     font-size: 12px;
-    background-color: #2196F3;
+    background-color: #02b3e4;
     border: none;
     border-radius: 1px;
 }
 
 #wikiArticle {
-
     text-align: center;
+    padding: 5px;
+}
+
+#wikiHeading {
+    color: white;
+}
+
+#wikiText {
+    color: white;
+}
+
+#wikiLink {
+    text-decoration: none;
+    background-color: #02b3e4;
+    padding: 10px 15px;
+    display: inline-block;
+    color: white;
+}
+
+#wikiLink:visited {
+    text-decoration: none;
+    color: white;
+}
+
+#wikiLink:hover {
+    text-decoration: none;
 }
 
 #map {
     width: 100%;
+}
+
+#footer {
+    text-align: center;
+    color: white;
 }
 
 

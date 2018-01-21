@@ -1,10 +1,8 @@
 /**
-* TODO: Error handling
+* TODO: Error handling -> Partially done
 * TODO: Initial marker for foursquare, otherwise template gives error
 * TODO: Display foursquare markers in own list that also works with filter
-
-
-* TODO: Disable wiki search for suggested venues. Close menu and infoWindow when buttons clicked
+* TODO: Finish styling and error handling. Work on separation of concerns
 */
 
 /**
@@ -125,7 +123,6 @@ var mapSuccess = function() {
                 // This will only execute once
                 if (!windowLoaded) {
                         windowLoaded = true;
-                        // Why index 0? TODO: Test this
                         ko.applyBindings(self, $('#infoWindow')[0]);
                 }
             });
@@ -195,6 +192,16 @@ var mapSuccess = function() {
                 'format': 'json'
             });
 
+            var wikiTimeout = setTimeout(function() {
+                self.wikiDiv([
+                             [''],
+                             ['An error occurred'],
+                             ['Failed to reach wikipedia servers'],
+                             ['']
+                         ]);
+
+            }, 5000);
+
             // Ajax request to retrieve wikipedia articles
             $.ajax({
                 url: wikiUrl,
@@ -203,8 +210,10 @@ var mapSuccess = function() {
                     var genericResponse = ([
                         ["Generic Response"],
                         ["No Info"],
-                        ["There exists no wikipedia page for this marker!"]
+                        ["There are no wikipedia info for this marker!"]
                     ]);
+
+                    clearTimeout(wikiTimeout);
 
                     if (!response[1][0]) {
                         self.wikiDiv(genericResponse);
@@ -223,7 +232,8 @@ var mapSuccess = function() {
         this.getFoursquareInfo = function(marker) {
             // Foursquare api endpoint to search a venue
             this.foursquareSearch = 'https://api.foursquare.com/v2/venues/search';
-
+            var errorString = 'The Foursquare API could not be reached, ' +
+                                'please reload the website';
 
             // Search the venue of the marker selected
             // Add the lat and lng parameters to the api endpoint to search location
@@ -240,6 +250,9 @@ var mapSuccess = function() {
             $.getJSON(searchUrl, function(responseData) {
                 self.fsInstance(new foursquareModel(responseData));
 
+            }).fail(function(xhrObject, status, error) {
+                self.infowindow.setContent(errorString);
+                alert("The Foursquare API could not be reached. Please reload the website.");
             });
 
         };
@@ -289,6 +302,8 @@ var mapSuccess = function() {
                 if ($(window).width() <= 1051) {
                     self.closeSideNav();
                 }
+            }).fail(function(xhrObject, status, error) {
+                alert("The Foursquare API could not be reached. Please reload the website.");
             });
         };
 
