@@ -1,17 +1,15 @@
 /**
-* TODO: Where do you use observables?? Need to look into this
 * TODO: Error handling
-* TODO: Will need initializations and also KO observables
+* TODO: Initial marker for foursquare, otherwise template gives error
+* TODO: Display foursquare markers in own list that also works with filter
+
+
+* TODO: Disable wiki search for suggested venues. Close menu and infoWindow when buttons clicked
 */
 
 /**
 * What is subject to a changing state? :
 * - New Foursquare markers after a default marker is clicked
-* - DONE: Wikipedia info. At the moment, div is fetched with jQuery and cleared manually. This is not allowed
-* - List and markers that respond to the search box. Marker is already passed into
-*   observable array of list items. Can use this to update markers together with list
-* - Content inside the info windows - Create contentString var that holds KO html template.
-*    Good example in JS fiddle
 **/
 
 
@@ -31,15 +29,20 @@ var mapSuccess = function() {
         // Global map variable (drawMarkers and initMap need access)
         var map;
         var self = this;
+
         // Create an array that will store the list of markers
         this.markersList = ko.observableArray([]);
+        // Array to store temporary foursquare markers
         this.tempMarkersList = [];
-
+        // Observable to hold foursquare response
+        this.fsInstance = ko.observable(0);
         // Observable for the wikipedia article
         this.wikiDiv = ko.observable(0);
 
         // Create an infowindow object to display third party info on the marker
-        var infowindow = new google.maps.InfoWindow();
+        this.infowindow = new google.maps.InfoWindow();
+        this.selectedMarker = ko.observable(0);
+        this.searchQuery = ko.observable('');
 
         // Function to delete the temporary foursquare markers
         this.deleteTempMarkers = function() {
@@ -47,6 +50,9 @@ var mapSuccess = function() {
                 currentMarker.setMap(null);
             });
             self.tempMarkersList = [];
+            if ($(window).width() <= 1051) {
+                self.closeSideNav();
+            }
         };
 
         /**
@@ -64,22 +70,25 @@ var mapSuccess = function() {
                     animation: google.maps.Animation.DROP,
                     title: currentMarker.name
                 });
-                // Add a listener to the marker using the Google api addListener method
-                marker.addListener('click', function() {
-                    // Call the selectMarker function and pass in the created Google marker
-                    self.selectMarker(marker);
-                });
+
                 /*
                 Add the created marker to the model of location data.
                 This is to keep track of which marker is clicked, whether the
                 marker is clicked directly or selected in the list.
                 */
-                // TODO: markersList is never used and does not contain new marker
-                //      Should probably pass currentMarker to array
                 currentMarker.marker = marker;
                 // Add the marker to the list of markers array
-                self.markersList.push(marker);
+                self.markersList.push(currentMarker);
+
+                // Add a listener to the marker using the Google api addListener method
+                marker.addListener('click', function() {
+                    // Call the selectMarker function and pass in the created Google marker
+                    self.selectMarker(currentMarker);
+                });
+
+
             });
+            self.selectedMarker(self.markersList()[0].marker);
         };
 
         /**
@@ -91,8 +100,36 @@ var mapSuccess = function() {
             // This initializes the Map at a certain location
             map = new google.maps.Map(document.getElementById('map'), {
                 center: {lat: -25.814474, lng: 28.244502},
-                zoom: 13
+                zoom: 13,
+                styles: mapStyles
             });
+        };
+
+        /**
+        * @description
+        * @param None
+        * @returns None
+        */
+        this.initInfowindow = function() {
+            // Boolean to determine if infowindow was loaded before
+            // If infowindow was not loaded before, apply knockout binding
+            var windowLoaded = false;
+            this.contentString = '<div id="infoWindow"' +
+                                'data-bind="template: {name: \'fs-template\', data: fsInstance}">' +
+                                '</div>';
+
+            self.infowindow.setContent(this.contentString);
+
+            google.maps.event.addListener(self.infowindow, 'domready', function() {
+
+                // This will only execute once
+                if (!windowLoaded) {
+                        windowLoaded = true;
+                        // Why index 0? TODO: Test this
+                        ko.applyBindings(self, $('#infoWindow')[0]);
+                }
+            });
+
         };
 
         /**
@@ -100,9 +137,9 @@ var mapSuccess = function() {
         * @param {object} marker - Marker object on which to open the infowindow
         * @returns None
         */
-        this.populateWindows = function(marker) {
+        this.populateWindows = function(marker, enableWiki) {
             // set the content on the marker
-            self.getWikipediaInfo(marker);
+            self.getWikipediaInfo(marker, enableWiki);
             self.getFoursquareInfo(marker);
         };
 
@@ -112,21 +149,34 @@ var mapSuccess = function() {
         * @returns None
         */
         this.selectMarker = function(clickedItem) {
+            // This ensures that if either a marker or a location object with a marker property
+            // is passed into the function, the marker will be handled correctly.
+            var clickedMarker = clickedItem.marker ? clickedItem.marker : clickedItem;
+            // True if original marker and false if suggested marker. This boolean value
+            // will be used to enable wikipedia search for original locations and disable
+            // it for suggested foursquare locations. This prevents random info from appearing
+            var getWiki = clickedItem.marker ? true : false;
+
             // Change the center of the map to the coordinates of the selected marker
-            map.panTo(clickedItem.position);
+            self.selectedMarker(clickedMarker);
+            map.panTo(clickedMarker.position);
             // Give the marker an animation with a duration of 2 sec using Google maps api
             // If marker is still busy with animation when clicked again, stop animation
-            if (clickedItem.getAnimation() !== null) {
-                clickedItem.setAnimation(null);
+            if (clickedMarker.getAnimation() !== null) {
+                clickedMarker.setAnimation(null);
             //  Give the marker a Bounce animation with a duration of 2 seconds
             } else {
-                clickedItem.setAnimation(google.maps.Animation.BOUNCE);
+                clickedMarker.setAnimation(google.maps.Animation.BOUNCE);
                 setTimeout(function() {
-                    clickedItem.setAnimation(null);
+                    clickedMarker.setAnimation(null);
                 }, 2000);
             }
             // Call the function to populate the infowindow with data
-            self.populateWindows(clickedItem);
+            self.infowindow.open(map, clickedMarker);
+            self.populateWindows(clickedMarker, getWiki);
+            if ($(window).width() <= 1051) {
+                self.closeSideNav();
+            }
         };
 
         /**
@@ -134,20 +184,17 @@ var mapSuccess = function() {
         * @param {object} marker - Marker object
         * @returns
         */
-        this.getWikipediaInfo = function(marker) {
-            // TODO: If article can't be found of marker, tell user and search town article for town instead
+        this.getWikipediaInfo = function(marker, getWiki) {
 
             // Endpoint for wikipedia api
             this.wikiEndpoint = 'https://en.wikipedia.org/w/api.php';
             // Create url with paramenters to search wikipedia
             var wikiUrl = this.wikiEndpoint + '?' + $.param({
                 'action': 'opensearch',
-                'search': marker.title,
+                'search': getWiki ? marker.title : 'Pretoria',  //'search': marker.title,
                 'format': 'json'
             });
 
-            // URL to search wikipedia articles. Used for link creation
-            //var wikiSearch = 'http://en.wikipedia.org/wiki/';
             // Ajax request to retrieve wikipedia articles
             $.ajax({
                 url: wikiUrl,
@@ -176,11 +223,11 @@ var mapSuccess = function() {
         this.getFoursquareInfo = function(marker) {
             // Foursquare api endpoint to search a venue
             this.foursquareSearch = 'https://api.foursquare.com/v2/venues/search';
-            // Foursquare api endpoint to explore recommended venues
-            this.foursquareExplore = 'https://api.foursquare.com/v2/venues/explore';
+
 
             // Search the venue of the marker selected
             // Add the lat and lng parameters to the api endpoint to search location
+            // TODO: Move this to a separate function/model for separation of concerns
             var searchUrl = this.foursquareSearch + '?' + $.param({
                 'll' : marker.position.lat() + ',' + marker.position.lng(),
                 'query': marker.title,
@@ -189,39 +236,18 @@ var mapSuccess = function() {
                 'v': '20180112'
             });
 
-            // TODO: Need a model for foursquare data instead of these variables
-
             // Ajax request works correctly. Can use response to populate infowindow
             $.getJSON(searchUrl, function(responseData) {
-                //console.log(responseData);
-                // TODO: This should be done with KO. Hidden div with changing values
-                // TODO: Foursquare model to store response. Pass model into contentstring observable
-                this.venueName = responseData.response.venues[0].name;
-                this.venueContact = responseData.response.venues[0].contact.formattedPhone;
+                self.fsInstance(new foursquareModel(responseData));
 
-                this.categories = ( responseData.response.venues[0].categories[0] ?
-                                    responseData.response.venues[0].categories[0].name :
-                                    'No Category');
-
-                this.location = responseData.response.venues[0].location.address;
-                this.venueStats = responseData.response.venues[0].stats.checkinsCount;
-                
-                this.contentString = '<div><h4>' + this.venueName + '</h4>' +
-                                    '<p>Contact details: ' + this.venueContact + '</p>' +
-                                    '<p>Venue category: ' + this.categories + '</p>' +
-                                    '<p>Venue Address: ' + this.location + '</p>' +
-                                    '<p>Number of check-ins: ' + this.venueStats + '</p>' +
-                                    '<button id="venuesButton" onclick="suggestMarkers(this)">Show suggested venues</button>' +
-                                    '</div>';
-
-                //this.contentString = ko.observable('<div id="infoWindow"></div>');
-
-                infowindow.setContent(this.contentString);
-                infowindow.open(map, marker);
             });
 
-            // TODO: Populate map with temporary markers of recommended venues
-            //      Create a new data model for the temp markers
+        };
+
+        this.createFoursquareMarkers = function(marker) {
+
+            this.foursquareExplore = 'https://api.foursquare.com/v2/venues/explore';
+
             var exploreUrl = this.foursquareExplore + '?' + $.param({
                 'll': marker.position.lat() + ',' + marker.position.lng(),
                 'limit': '10',
@@ -231,49 +257,76 @@ var mapSuccess = function() {
             });
 
 
-            // TODO: This should run in a seperate function
-            $.getJSON(exploreUrl, function(responseData) {
 
+            // Ajax request to fetch foursquare info
+            $.getJSON(exploreUrl, function(responseData) {
 
                 self.tempMarkersList.forEach(function(currentMarker) {
                     currentMarker.setMap(null);
                 });
                 self.tempMarkersList = [];
 
-                responseData.response.groups[0].items.forEach(function(currentItem) {
+                responseData.response.groups[0].items.forEach(function(currentItem,index) {
 
-                    var markerTemp = new google.maps.Marker({
+                    var fsMarker = new google.maps.Marker({
                         position: {lat: currentItem.venue.location.lat, lng: currentItem.venue.location.lng},
                         map: map,
                         animation: google.maps.Animation.DROP,
                         title: currentItem.venue.name,
-                        label: "FS"
+                        icon: {
+                            path: google.maps.SymbolPath.BACKWARD_CLOSED_ARROW,
+                            scale: 5
+                        }
                     });
 
-                    markerTemp.addListener('click', function() {
-                        // Call the selectMarker function and pass in the created Google marker
-                        this.contentString = '<div><h4>' + currentItem.venue.name + '</h4>' +
-                                            '<p>Contact details: ' + currentItem.venue.contact.formattedPhone + '</p>' +
-                                            '<p>Venue category: ' + currentItem.venue.categories[0].name + '</p>' +
-                                            '<p>Venue Address: ' + currentItem.venue.location.address + '</p>' +
-                                            '</div>';
+                    self.tempMarkersList.push(fsMarker);
 
-                        infowindow.setContent(this.contentString);
-                        infowindow.open(map, markerTemp);
+                    fsMarker.addListener('click', function() {
+                        self.selectMarker(fsMarker);
                     });
-
-                    self.tempMarkersList.push(markerTemp);
                 });
-
+                self.infowindow.close();
+                if ($(window).width() <= 1051) {
+                    self.closeSideNav();
+                }
             });
-
         };
+
+
+        // Computed observable that uses observable arry created at the start
+        // Take query string to lower case in order to always match characters
+        this.result = ko.computed(function() {
+            // Returns the result if it is true
+            return self.markersList().filter(function(currentVal) {
+                // Will return true if the letters are present in the correct sequence in location
+                if (currentVal.name.toLowerCase().indexOf(self.searchQuery().toLowerCase()) >= 0) {
+                    currentVal.marker.setMap(map);
+                    return true;
+                } else {
+                    currentVal.marker.setMap(null);
+                    return false;
+                }
+            });
+        });
+
+        this.openSideNav = function() {
+            $('#sidebar')[0].style.width = "250px";
+        };
+
+        this.closeSideNav = function() {
+            $('#sidebar')[0].style.width = "0px";
+            $('#map')[0].style.width = '100%';
+        };
+
+
 
         // Initialize the google map on the page
         this.initMap();
+        this.initInfowindow();
         // Draw the default markers on the page
         this.drawMarkers();
     };
 
     ko.applyBindings(new viewModel());
+
 };

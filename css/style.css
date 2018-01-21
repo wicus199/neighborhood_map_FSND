@@ -1,3 +1,11 @@
+/*
+*TODO: Media queries:
+        - Min up to 450px for phones
+        - Minor change from 451 to 700
+        - From 700 to 1050 for tablets
+        - Max at 1250
+*/
+
 * {
     box-sizing: border-box;
 }
@@ -8,36 +16,207 @@ html, body {
 
 header {
     width: 100%;
-    height: 10%;
-    border: 2px solid red;
-}
-
-footer {
-    width: 100%;
-    height: 5%;
-    border: 2px solid red;
+    height: 39px;
+    border: 2px solid #e0e0e0;
+    border-radius: 3px;
+    background-color: #fff;
+    text-align: center;
 }
 
 #pageHeader {
-    width: 100%;
+    display: inline-block;
+    width: 90%;
+    font-size: 21px;
+    padding-top: 5px;
+    margin: auto;
 }
 
+#openButton {
+    width: 10%;
+}
+
+/*Main container is fixed layout, no flex for sidebar and map*/
 #mainContainer {
     display: flex;
     flex-wrap: wrap;
-    height: 85%;
+    height: 95%;
 }
 
 #sidebar {
-    width: 25%;
-    border: 2px solid red;
+    height: 100%;
+    /*Will change width with javascript*/
+    width: 0;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    overflow-x: hidden;
+    transition: 0.5s;
+
+    background-color: #ddd;
+}
+
+#closeButton {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    font-size: 35px;
+    margin-left: 40px;
+    padding-right: 5px;
+    margin-top: 2px;
+    text-decoration: none;
+}
+
+#closeButton:visited {
+    text-decoration: none;
+}
+
+#openButton {
+    font-size: 20px;
+}
+
+#sidebar hr {
+    border-width: 1px;
+    border-color: #000;
+    border-style: dotted;
+}
+
+#searchBox {
+    width: 80%;
+    display: block;
+    margin: 0 auto;
+    margin-left: 5px;
+    margin-top: 5px;
+    border-radius: 5px;
+    border-style: none;
+    font-size: 20px;
+    padding: 4px;
 }
 
 #placesArea {
 
 }
 
+#placesArea ul {
+    list-style-type: square;
+}
+
+#infoWindow h3 {
+    font-weight: bold;
+    text-align: center;
+}
+
+#infoWindow p {
+    text-align: left;
+}
+
+#infoWindow p:last-child {
+    text-align: center;
+}
+
+
+.bigButton {
+    width: 130px;
+    height: 70px;
+    display: block;
+    margin: 5px auto;
+    font-size: 15px;
+    background-color: #2196F3;
+    border: none;
+    border-radius: 1px;
+}
+
+.smallButton {
+    width: 140px;
+    height: 50px;
+    display: block;
+    margin: 5px auto;
+    font-size: 12px;
+    background-color: #2196F3;
+    border: none;
+    border-radius: 1px;
+}
+
+#wikiArticle {
+
+    text-align: center;
+}
+
 #map {
-    width: 75%;
-    border: 2px solid red;
+    width: 100%;
+}
+
+
+
+@media screen and (min-width: 451px) {
+
+}
+
+@media screen and (min-width: 701px) {
+    header {
+        height: 54px;
+    }
+
+    #pageHeader {
+        padding-top: 5px;
+        padding-bottom: 5px;
+        font-size: 25px;
+        margin: 6px auto;
+    }
+
+    #openButton {
+        font-size: 25px;
+    }
+}
+
+@media screen and (min-width: 1051px) {
+
+    header {
+
+    }
+
+    #sidebar {
+        width: 30%;
+        position: relative;
+    }
+
+    #map {
+        width: 70%;
+    }
+
+    #closeButton {
+        display: none;
+    }
+
+    #openButton {
+        display: none;
+    }
+
+    #searchBox {
+        margin: 5px auto;
+    }
+
+    #buttons {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    #btnInfowindow {
+        display: flex;
+        flex-wrap: wrap;
+        align-content: space-between;
+    }
+
+    #btnInfowindow button:first-child {
+        margin-right: 5px;
+    }
+
+    #btnInfowindow button:last-child {
+        margin-left: 5px;
+    }
+
+}
+
+@media screen and (min-width: 1251px) {
+
 }

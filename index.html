@@ -12,51 +12,66 @@
 <body>
 
     <header>
+        <a id="openButton" data-bind="click: openSideNav">&#9776;</a>
         <h2 id="pageHeader">Map Project</h2>
-        <button data-bind="click: deleteTempMarkers">Delete FS markers</button>
     </header>
 
     <section id="mainContainer">
+
+
         <div id="sidebar">
 
+            <a href="javascript:void(0)" data-bind="click: closeSideNav" id="closeButton">&times;</a>
+
+            <input id="searchBox" type="text" data-bind="textInput: searchQuery">
+            <hr />
             <div id="placesArea">
-                <ul data-bind="foreach: markersList">
-                    <li id="list-item" data-bind="text: title, click: $parent.selectMarker"></li>
+                <ul data-bind="foreach: result">
+                    <li id="list-item" data-bind="text: marker.title, click: $parent.selectMarker"></li>
                 </ul>
 
             </div>
-
-            <div id="wikiArticle" data-bind="with: wikiDiv"> <!--data-bind="template: {name: 'fs-template', data: currentFsMarker}"-->
+            <hr />
+            <div id="buttons" data-bind="with: selectedMarker">
+                <button class="bigButton" data-bind="click: $parent.createFoursquareMarkers">Show suggested places</button>
+                <button class="bigButton" data-bind="click: $parent.deleteTempMarkers">Hide suggested places</button>
+            </div>
+            <hr />
+            <div id="wikiArticle" data-bind="with: wikiDiv">
                 <h2 id="wikiHeading" data-bind="text: $data[1][0]"></h2>
                 <p id="wikiText" data-bind="text: $data[2][0]"></p>
                 <a id="wikiLink" href="" data-bind="attr: {href: 'http://en.wikipedia.org/wiki/'+$data[1][0]}">Read more...</a>
 
             </div>
+            <hr />
+            <p id="footer">Map provided by Google</p>
 
         </div>
 
         <div id="map"></div>
     </section>
 
-
-    <footer>
-        <p>Map provided by Google</p>
-    </footer>
-
     <script type="text/html" id="fs-template">
-    <!--
-        <h3 id="venue-name" data-bind="text: venueName"></h3>
-        <p id="contact-details" data-bind="text: venueContact"></p>
-        <p id="category" data-bind="text: categories"></p>
-        <p id="address" data-bind="text: location"></p>
-        <p id="check-ins" data-bind="text: venueStats"></p>
-    -->
+
+        <h3 id="venue-name"><span data-bind="text: venueName"></span></h3>
+        <p id="contact-details"><strong>Contact details: </strong><span data-bind="text: venueContact"></span></p>
+        <p id="category"><strong>Venue category: </strong><span data-bind="text: categories"></span></p>
+        <p id="address"><strong>Address: </strong><span data-bind="text: location"></span></p>
+        <p id="check-ins"><strong>Number of check-ins: </strong><span data-bind="text: venueStats"></span></p>
+
+        <div id="btnInfowindow" data-bind="with: $root.selectedMarker">
+            <button class="smallButton" data-bind="click: $root.createFoursquareMarkers">Show suggested places</button>
+            <button class="smallButton" data-bind="click: $root.deleteTempMarkers">Hide suggested places</button>
+        </div>
+
+        <p>Info brought to you by Foursquare</p>
     </script>
 
     <script src="js/lib/knockout-3.2.0.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="js/markerModel.js"></script>
     <script src="js/foursquareModel.js"></script>
+    <script src="js/mapStyle.js"></script>
     <script src="js/app.js"></script>
     <script async defer
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD5QwMXri-rR2ZuebHVKVNKy1JJVJTMKS8&v=3&callback=mapSuccess">
