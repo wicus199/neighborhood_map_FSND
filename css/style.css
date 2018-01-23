@@ -59,8 +59,18 @@ header {
     background-color: #2e3d49;
 }
 
-#listItem {
+.placesHeading {
+    text-align: center;
     color: white;
+}
+
+.listItem {
+    color: white;
+}
+
+.listItem:hover {
+    color: #02b3e4;
+    cursor: pointer;
 }
 
 #closeButton {
@@ -100,10 +110,6 @@ header {
     border-style: none;
     font-size: 20px;
     padding: 4px;
-}
-
-#placesArea {
-
 }
 
 #placesArea ul {
@@ -257,6 +263,12 @@ header {
 
 }
 
-@media screen and (min-width: 1251px) {
+@media screen and (min-width: 1400px) {
+    #sidebar {
+        width: 20%;
+    }
+    #map {
+        width: 80%;
+    }
 
 }
