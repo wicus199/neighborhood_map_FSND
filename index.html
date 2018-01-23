@@ -27,10 +27,10 @@
             <input id="searchBox" type="text" data-bind="textInput: searchQuery">
             <hr />
             <div id="placesArea">
+                <h2 class="placesHeading">Explore Pretoria</h2>
                 <ul data-bind="foreach: result">
-                    <li id="listItem" data-bind="text: marker.title, click: $parent.selectMarker"></li>
+                    <li class="listItem" data-bind="text: marker.title, click: $parent.selectMarker"></li>
                 </ul>
-
             </div>
             <hr />
             <div id="buttons" data-bind="with: selectedMarker">
@@ -42,6 +42,13 @@
                 <h2 id="wikiHeading" data-bind="text: $data[1][0]"></h2>
                 <p id="wikiText" data-bind="text: $data[2][0]"></p>
                 <a id="wikiLink" href="" target="_blank" data-bind="attr: {href: 'http://en.wikipedia.org/wiki/'+$data[1][0]}">Read more</a>
+            </div>
+            <hr />
+            <div id="placesArea">
+                <h2 class="placesHeading">Suggested Places</h2>
+                <ul data-bind="foreach: resultFs">
+                    <li class="listItem" data-bind="text: title, click: $parent.selectMarker"></li>
+                </ul>
             </div>
             <hr />
             <p id="footer">Map provided by Google</p>
@@ -70,6 +77,7 @@
     <script src="js/lib/knockout-3.2.0.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="js/markerModel.js"></script>
+    <script src="js/linkModel.js"></script>
     <script src="js/foursquareModel.js"></script>
     <script src="js/mapStyle.js"></script>
     <script src="js/app.js"></script>
