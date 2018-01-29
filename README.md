@@ -41,6 +41,6 @@ When switching between mobile and desktop versions of the app in Google Chrome u
 ## Source Attribution
 
 Third party API data used in the project are:
-* Foursquare API to search recommended venues and provide info for lcoations
+* Foursquare API to search recommended venues and provide info for locations
 * Wikipedia API to provide Wikipedia info for all of the default locations on the map
 * Google Maps API to provide the map, markers and infowindows for the locations
