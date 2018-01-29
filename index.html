@@ -3,28 +3,21 @@
 <head>
     <meta charset="utf-8">
     <title>Neighborhood Map</title>
-
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
     <meta name="mobile-web-app-capable" content="yes">
     <link rel="stylesheet" href="css/style.css">
     <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
-
 </head>
 
 <body>
-
     <header>
         <a id="openButton" data-bind="click: openSideNav">&#9776;</a>
         <h2 id="pageHeader">Pretoria Neighborhood Map</h2>
     </header>
 
     <section id="mainContainer">
-
-
         <div id="sidebar">
-
             <a href="javascript:void(0)" data-bind="click: closeSideNav" id="closeButton">&times;</a>
-
             <input id="searchBox" type="text" placeholder="Type here to filter locations..." data-bind="textInput: searchQuery">
             <hr />
             <div id="placesArea">
@@ -53,7 +46,6 @@
             </div>
             <hr />
             <p id="footer">Map provided by Google</p>
-
         </div>
 
         <div id="map"></div>
@@ -85,6 +77,5 @@
     <script src="js/foursquareModel.js"></script>
     <script src="js/mapStyle.js"></script>
     <script src="js/app.js"></script>
-
 </body>
 </html>

@@ -1,3 +1,4 @@
+// Simple styling used for the map
 var mapStyles = [
     {
         "featureType": "administrative.country",

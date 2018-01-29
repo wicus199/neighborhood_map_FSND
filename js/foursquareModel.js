@@ -1,4 +1,8 @@
-
+/**
+* @description Model that holds the data from the foursquare response in Knockout observables
+* @param {object} data - Response returned from the Foursquare API
+* @returns None
+*/
 var foursquareModel = function(data) {
     this.venueName = ko.observable(data.response.venues[0].name);
     this.venueContact = ko.observable(data.response.venues[0].contact.formattedPhone);

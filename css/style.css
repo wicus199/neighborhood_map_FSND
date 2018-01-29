@@ -40,7 +40,6 @@ header {
     color: #02b3e4;
 }
 
-/*Main container is fixed layout, no flex for sidebar and map*/
 #mainContainer {
     display: flex;
     flex-wrap: wrap;
@@ -130,7 +129,6 @@ header {
     text-align: center;
 }
 
-
 .bigButton {
     width: 130px;
     height: 70px;
@@ -194,12 +192,6 @@ header {
     color: white;
 }
 
-
-
-@media screen and (min-width: 451px) {
-
-}
-
 @media screen and (min-width: 701px) {
     header {
         height: 54px;
@@ -218,11 +210,6 @@ header {
 }
 
 @media screen and (min-width: 1051px) {
-
-    header {
-
-    }
-
     #sidebar {
         width: 30%;
         position: relative;
@@ -262,7 +249,6 @@ header {
     #btnInfowindow button:last-child {
         margin-left: 5px;
     }
-
 }
 
 @media screen and (min-width: 1400px) {
@@ -272,5 +258,4 @@ header {
     #map {
         width: 80%;
     }
-
 }

@@ -1,3 +1,6 @@
+/**
+* @description Model to hold the default locations
+*/
 markers = [
     {
         name: "Pretoria National Botanical Garden",

@@ -4,7 +4,7 @@
 * @returns None
 */
 var mapFail = function() {
-
+    // Content string to populate error div when Google Maps fails to load
     var content = '<div id="gErrorDiv"><h2 id="gErrorHeading">Something went wrong when connecting to the Google Servers</h2>'+
                   '<p id="gErrorPar">Please try again by reloading the page. Sorry for the inconvenience caused.</p></div>';
     $('#map').html(content);
@@ -41,7 +41,6 @@ var mapSuccess = function() {
         // Create an infowindow object to display third party info on the marker
         this.infowindow = new google.maps.InfoWindow();
 
-        // Function to delete the temporary foursquare markers
         /**
         * @description Function will delete temporary markers created for Foursquare suggested venues
         * @param None
@@ -210,7 +209,7 @@ var mapSuccess = function() {
         */
         this.getWikipediaInfo = function(marker, getWiki) {
             // Create url with paramenters to search wikipedia
-            // Search parameter will be marker title if getWiki is true and Pretoria if getWiki is false
+            // Search parameter will be marker title if getWiki is true and 'Pretoria' if getWiki is false
             var wikiUrl = wikiModel.endpoint + '?' + $.param({
                 'action': wikiModel.action,
                 'search': getWiki ? marker.title : 'Pretoria',
@@ -293,7 +292,7 @@ var mapSuccess = function() {
                 self.deleteTempMarkers();
                 // Loop through the venues in the response
                 responseData.response.groups[0].items.forEach(function(currentItem,index) {
-                    // Create new markers for the foursuare suggested venues with a different icon
+                    // Create new markers for the foursuare suggested venues with a blue marker icon
                     var fsMarker = new google.maps.Marker({
                         position: {lat: currentItem.venue.location.lat, lng: currentItem.venue.location.lng},
                         map: map,
@@ -357,17 +356,24 @@ var mapSuccess = function() {
         });
 
         // Function to open the side navigation when the menu button is clicked
+        /**
+        * @description Open the side navigation menu when the menu button is clicked
+        * @param None
+        * @returns None
+        */
         this.openSideNav = function() {
             $('#sidebar')[0].style.width = "250px";
         };
 
-        // Function to close the side navigation menu when the close menu button is clicked
+        /**
+        * @description Close the side navigation menu when the close button is clicked
+        * @param None
+        * @returns None
+        */
         this.closeSideNav = function() {
             $('#sidebar')[0].style.width = "0px";
             $('#map')[0].style.width = '100%';
         };
-
-
 
         // Initialize the google map on the page
         this.initMap();

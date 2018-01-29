@@ -1,3 +1,4 @@
+// Model object to store parameters used in the foursquare ajax call
 fsSearchModel = {
     searchEndpoint:  'https://api.foursquare.com/v2/venues/search',
     exploreEndpoint: 'https://api.foursquare.com/v2/venues/explore',
@@ -8,6 +9,7 @@ fsSearchModel = {
     version:         '20180112'
 };
 
+// Model object to store parameters used in the wikipedia ajax call
 wikiModel = {
     endpoint:       'https://en.wikipedia.org/w/api.php',
     action:         'opensearch',
