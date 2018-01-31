@@ -3,7 +3,7 @@
 * @param None
 * @returns None
 */
-var mapFail = function() {
+var MapFail = function() {
     // Content string to populate error div when Google Maps fails to load
     var content = '<div id="gErrorDiv"><h2 id="gErrorHeading">Something went wrong when connecting to the Google Servers</h2>'+
                   '<p id="gErrorPar">Please try again by reloading the page. Sorry for the inconvenience caused.</p></div>';
@@ -15,7 +15,7 @@ var mapFail = function() {
 * @param None
 * @returns None
 */
-var mapSuccess = function() {
+var MapSuccess = function() {
     /**
     * @description This is the viewModel of the app that binds the model and views
     * @param None
