@@ -67,9 +67,6 @@
         <p>Info brought to you by Foursquare</p>
     </script>
 
-    <script defer
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD5QwMXri-rR2ZuebHVKVNKy1JJVJTMKS8&v=3&callback=mapSuccess" onerror="mapFail()">
-    </script>
     <script src="js/lib/knockout-3.2.0.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="js/markerModel.js"></script>
@@ -77,5 +74,8 @@
     <script src="js/foursquareModel.js"></script>
     <script src="js/mapStyle.js"></script>
     <script src="js/app.js"></script>
+    <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD5QwMXri-rR2ZuebHVKVNKy1JJVJTMKS8&v=3&callback=MapSuccess" onerror="MapFail()">
+    </script>
 </body>
 </html>
